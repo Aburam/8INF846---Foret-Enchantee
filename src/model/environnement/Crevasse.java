@@ -6,5 +6,9 @@ public class Crevasse extends Case{
 		super(x, y);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public String toString(){
+		return "C";
+	}
 
 }

@@ -7,4 +7,7 @@ public class Monstre extends Case{
 		// TODO Auto-generated constructor stub
 	}
 
+	public String toString(){
+		return "M";
+	}
 }
