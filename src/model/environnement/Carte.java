@@ -53,7 +53,7 @@ public class Carte {
 	public void addCapteurs(){
 		for(int x = 0; x < m_longueur ; x++){
 			for(int y = 0 ; y < m_longueur; y++){
-				if(m_cases[y][x].getCapteur()!=Capteur.LUMIERE && m_cases[y][x].getAgent()==null)
+				if(m_cases[y][x].getCapteur()!=Capteur.LUMIERE)
 				{
 					if(y<m_longueur-1){
 						switch(m_cases[y+1][x].getType()){

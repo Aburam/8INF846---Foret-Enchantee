@@ -67,7 +67,7 @@ public class Case {
 		String ret ="";
 		switch(m_type){
 		case NEUTRE:
-			ret = (m_capteur != null)? m_capteur.toString() : (m_agent!=null)? m_agent.toString() : " ";
+			ret = (m_agent!=null)? m_agent.toString() : (m_capteur != null)? m_capteur.toString() : " ";
 			break;
 		case MONSTRE:
 			ret = "M";
