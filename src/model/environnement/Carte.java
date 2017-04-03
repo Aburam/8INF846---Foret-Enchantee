@@ -103,7 +103,7 @@ public class Carte {
 	public Case getCase(int positionX, int positionY) throws Exception{
 		if(positionX <m_longueur && positionY <m_longueur)
 		{
-			return m_cases[positionY][positionX];
+			return m_cases[positionX][positionY];
 		}
 		else
 		{
