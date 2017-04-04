@@ -59,9 +59,62 @@ public class Agent{
 		}
 	}
 
-	public void calculerProbaFrontiere() {
+	//Retourne la case voisine de l'agent avec le moins de probabilité de tomber dans une crevasse ou le plus de probabilité de tuer un monstre
+	public Case getMeilleurCaseVoisine(Carte carte) {
 
-		Capteur[] capteurs = {Capteur.VENT, Capteur.ODEUR};
+
+
+		Case currentCase = null;
+		try {
+			currentCase = carte.getCase(this.x, this.y);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Capteur capteur = currentCase.getCapteur();
+
+
+
+		Case meilleurCase = null;
+
+		if(capteur == Capteur.ODEUR || capteur == Capteur.VENT) {
+
+			HashMap<Case, Double> probas = calculerProbaFrontiere(capteur);
+
+			double meilleurProba = 1;
+			if(capteur == Capteur.ODEUR){
+				meilleurProba = 0;
+			}
+
+
+			Iterator it = probas.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<Case, Double> pair = (Map.Entry)it.next();
+				Case caseFrontiere = pair.getKey();
+				if(currentCase.isVoisine(caseFrontiere)) {
+					double proba = pair.getValue();
+					if((capteur == Capteur.VENT && proba < meilleurProba) || (capteur == Capteur.ODEUR && proba > meilleurProba)) {
+						meilleurProba = proba;
+						meilleurCase = caseFrontiere;
+					}
+				}
+			}
+
+			if(meilleurCase != null)
+				System.out.println("Meilleur case voisine (" + meilleurCase.getPositionX() +", "  +  meilleurCase.getPositionY() + ") = " + meilleurProba);
+
+		}
+
+
+
+		return meilleurCase;
+
+
+	}
+
+	public HashMap<Case, Double> calculerProbaFrontiere(Capteur capteur) {
+
+
 		//FIXME: faire le calcul des probas sur toute la frontiere (pas seulement pour la premiere case)
 		int index = 0;
 
@@ -73,53 +126,58 @@ public class Agent{
 
 		//TODO calculer aussi la proba pour les odeurs
 
-		HashMap<Case, Double> probas = new HashMap<>();
-
-		for(int k=0; k<2; k++) {
-			int[] solution = calculerFrontiereDanger(frontiereDanger, sousFrontiereDanger, capteurs[k]);
-
-			for(int i=0; i<frontiereDanger.size(); i++) {
-
-				initializeSolution(solution);
-
-				Case currentCheckingCase = null;
-				//On enleve la case sur laquelle on calcule la probabilité (elle sera automatiquement considérée comme une crevasse ou un monstre)
-				if(solution != null) {
-					currentCheckingCase = frontiereDanger.get(index);
-					frontiereDanger.remove(index);
-				}
+		HashMap<Case, Double> probas = new HashMap<Case, Double>();
 
 
+		int[] solution = calculerFrontiereDanger(frontiereDanger, sousFrontiereDanger, capteur);
 
-				double proba = 0;
-
-				while(solution != null && solution[0]!=-1) {
-
-					if(checkIsSolutionIsFeasible(solution, frontiereDanger, sousFrontiereDanger, currentCheckingCase)) {
-						proba += evaluerSolution(solution);
-					}
-					nextSolution(solution);
-				}
-				//On multiplie par la probabilité qu'il y ait un monstre ou crevasse sur la case courante
-				proba*=0.1;
-
-				if(!probas.containsKey(currentCheckingCase)) {
-					probas.put(currentCheckingCase, proba);
-				} else {
-					probas.put(currentCheckingCase, probas.get(currentCheckingCase) + proba);
-				}
-
-/*				if(frontiereDanger.size() > 0) {
-					System.out.println("Proba de la case (" + frontiereDanger.get(index).getPositionX() +", "  +  frontiereDanger.get(index).getPositionY() + ") = " + proba);
-				}*/
-
-				frontiereDanger.add(currentCheckingCase);
-			}
+		if(frontiereDanger.size() == 1) {
+			probas.put(frontiereDanger.get(0), 1.0);
+			return probas;
 		}
 
-		System.out.println("Probas");
-		printMap(probas);
+		for(int i=0; i<frontiereDanger.size(); i++) {
 
+			initializeSolution(solution);
+
+			Case currentCheckingCase = null;
+			//On enleve la case sur laquelle on calcule la probabilité (elle sera automatiquement considérée comme une crevasse ou un monstre)
+			if(solution != null) {
+				currentCheckingCase = frontiereDanger.get(index);
+				frontiereDanger.remove(index);
+			}
+
+
+
+			double proba = 0;
+
+			while(solution != null && solution[0]!=-1) {
+
+				if(checkIsSolutionIsFeasible(solution, frontiereDanger, sousFrontiereDanger, currentCheckingCase)) {
+					proba += evaluerSolution(solution);
+				}
+				nextSolution(solution);
+			}
+			//On multiplie par la probabilité qu'il y ait un monstre ou crevasse sur la case courante
+			proba*=0.1;
+
+			if(!probas.containsKey(currentCheckingCase)) {
+				probas.put(currentCheckingCase, proba);
+			} else {
+				probas.put(currentCheckingCase, probas.get(currentCheckingCase) + proba);
+			}
+
+/*				if(frontiereDanger.size() > 0) {
+				System.out.println("Proba de la case (" + frontiereDanger.get(index).getPositionX() +", "  +  frontiereDanger.get(index).getPositionY() + ") = " + proba);
+			}*/
+
+			frontiereDanger.add(currentCheckingCase);
+		}
+
+
+		//System.out.println("Probas");
+		printMap(probas);
+		return probas;
 
 	}
 
@@ -129,7 +187,7 @@ public class Agent{
 		while (it.hasNext()) {
 			Map.Entry<Case, Double> pair = (Map.Entry)it.next();
 			System.out.println("Proba ["+ pair.getKey()+"] (" + pair.getKey().getPositionX() +", " +  pair.getKey().getPositionY() + ") = " + pair.getValue());
-			it.remove(); // avoids a ConcurrentModificationException
+			//it.remove(); // avoids a ConcurrentModificationException
 		}
 	}
 

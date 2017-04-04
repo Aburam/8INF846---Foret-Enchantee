@@ -37,7 +37,9 @@ public class Main {
 
 				try {
 
-					agent.calculerProbaFrontiere();
+					//agent.calculerProbaFrontiere();
+					Case meilleurCaseVoisine = agent.getMeilleurCaseVoisine(carte);
+
 
 					// Trouver le prochain mouvement
 					//FIXME: Ici le mouvement est aléatoire
