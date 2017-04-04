@@ -3,6 +3,8 @@ package model.environnement;
 import model.agent.Agent;
 import model.capteurs.Capteur;
 
+import static java.lang.StrictMath.abs;
+
 public class Case {
 
 	private int m_x;
@@ -76,5 +78,29 @@ public class Case {
 			ret = "C";
 		}
 		return ret;
+	}
+
+	public boolean isVoisine(Case autreCase) {
+		int distance = abs(m_x	- autreCase.m_x) + abs(m_y - autreCase.m_y);
+		if(distance == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (!Case.class.isAssignableFrom(obj.getClass())) {
+			return false;
+		}
+		final Case other = (Case) obj;
+		if (m_x != other.m_x || m_y != other.m_y) {
+			return false;
+		}
+		return true;
 	}
 }

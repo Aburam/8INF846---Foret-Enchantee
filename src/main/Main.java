@@ -12,7 +12,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Agent agent = new Agent(0,0);
-		Carte carte = new Carte(3, agent);
+		Carte carte = new Carte(6, agent);
 		Effecteur effecteur = new Effecteur(agent, carte);
 
 
@@ -37,7 +37,7 @@ public class Main {
 
 				try {
 
-
+					agent.calculerProbaFrontiere();
 
 					// Trouver le prochain mouvement
 					//FIXME: Ici le mouvement est aléatoire
