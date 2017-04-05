@@ -242,7 +242,29 @@ public class Effecteur {
 					}
 				}
 				else if(currentPosition.getCapteur().equals(Capteur.VENT)){
-					
+					if(distanceX != 0 )
+					{
+
+						switch(distanceX){
+							case 1:
+								performAction(Action.BougerD);
+								break;
+							case -1:
+								performAction(Action.BougerG);
+								break;
+						}
+					}
+					else if(distanceY !=0)
+					{
+						switch(distanceY){
+							case 1:
+								performAction(Action.BougerB);
+								break;
+							case -1:
+								performAction(Action.BougerH);
+								break;
+						}
+					}
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
