@@ -2,8 +2,11 @@ package model.effecteurs;
 
 import model.action.Action;
 import model.agent.Agent;
+import model.capteurs.Capteur;
 import model.environnement.Carte;
 import model.environnement.Case;
+import model.environnement.Type;
+import model.capteurs.Capteur;
 
 import static model.action.Action.BougerH;
 
@@ -41,15 +44,54 @@ public class Effecteur {
                 this.bouger(0,1);
                 System.out.println("DROITE");
                 break;
+            default:
+            	shoot(action);
+            	break;
         }
 
+    }
+    
+    private void shoot(Action ac){
+    	try {
+			Case posAgent = carte.getCase(agent.getX(), agent.getY());
+			Case posMonstre;
+	    	switch (ac){
+	    	case TirerH:
+	    		posMonstre=carte.getCase(agent.getX(), agent.getY()-1);
+	    		if(posMonstre.getType().equals(Type.MONSTRE)){
+	    			posMonstre.setType(Type.NEUTRE);
+	    		}
+	        	break;
+	        case TirerB:
+	        	posMonstre=carte.getCase(agent.getX(), agent.getY()+1);
+	    		if(posMonstre.getType().equals(Type.MONSTRE)){
+	    			posMonstre.setType(Type.NEUTRE);
+	    		}
+	        	break;
+	        case TirerG:
+	        	posMonstre=carte.getCase(agent.getX()-1, agent.getY());
+	    		if(posMonstre.getType().equals(Type.MONSTRE)){
+	    			posMonstre.setType(Type.NEUTRE);
+	    		}
+	        	break;
+	        case TirerD:
+	        	posMonstre=carte.getCase(agent.getX()+1, agent.getY()-1);
+	    		if(posMonstre.getType().equals(Type.MONSTRE)){
+	    			posMonstre.setType(Type.NEUTRE);
+	    		}
+	        	break;
+	    	}
+	    	
+    	} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public void bouger(int dx, int dy) throws Exception {
         carte.getCase(agent.getX()+dx,agent.getY()+dy).setAgent(agent);
         carte.getCase(agent.getX(),agent.getY()).setAgent(null);
         agent.bouger(dx,dy);
-		agent.ajouterCaseVisitee(carte, carte.getCase(dx, dy));
     }
     
     private void flee(){
@@ -109,7 +151,21 @@ public class Effecteur {
 			}
 		}
 		else {
-			
+			Case currentPosition;
+			Case bestNext;
+			try {
+				currentPosition = carte.getCase(agent.getX(), agent.getY());
+				bestNext=agent.getMeilleurCaseVoisine(carte);
+				if(currentPosition.getCapteur().equals(Capteur.ODEUR)){
+					
+				}
+				else if(currentPosition.getCapteur().equals(Capteur.VENT)){
+					
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -121,6 +177,7 @@ public class Effecteur {
 				info = m_engine.solve("shootHim("+agent.getX()+","+agent.getY()+").");
 				if(info.isSuccess()){
 					Case caseCible = agent.getMeilleurCaseVoisine(carte);
+					
 				}
 			}
 		} catch (MalformedGoalException e) {
