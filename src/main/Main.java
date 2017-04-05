@@ -22,29 +22,35 @@ public class Main {
 		try {
 			Theory theory = new Theory(new FileInputStream("src/model/Prolog/db.pl"));
 			engine.setTheory(theory);
-			
+
 		} catch (InvalidTheoryException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			System.out.println("Sorry not here "+e1.line);
 			System.exit(0);
 		} finally {
-			Agent agent = new Agent(0,0);
-			Carte carte = new Carte(6, agent,engine);
-			Effecteur effecteur = new Effecteur(agent, carte);
-			
-			Random generator = new Random();
 
-			try {
-				Case currentCase = carte.getCase(agent.getX(), agent.getY());
-				// Sauvegarde de la case visitee
-				agent.ajouterCaseVisitee(carte, currentCase);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			int nbLongueur = 3;
+
+			while(true){
+
+				Agent agent = new Agent(0,0);
+				Carte carte = new Carte(nbLongueur, agent,engine);
+
+				Effecteur effecteur = new Effecteur(agent, carte);
+
+				Random generator = new Random();
+
+				try {
+					Case currentCase = carte.getCase(agent.getX(), agent.getY());
+					// Sauvegarde de la case visitee
+					agent.ajouterCaseVisitee(carte, currentCase);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 
-			boolean isFinish = false;
+				boolean isFinish = false;
 
 				while(!isFinish){
 
@@ -58,18 +64,18 @@ public class Main {
 						//FIXME: Ici le mouvement est aléatoire
 						int rand = generator.nextInt(4);
 						switch (rand) {
-							case 0:
-								effecteur.performAction(Action.BougerB);
-								break;
-							case 1:
-								effecteur.performAction(Action.BougerD);
-								break;
-							case 2:
-								effecteur.performAction(Action.BougerG);
-								break;
-							case 3:
-								effecteur.performAction(Action.BougerH);
-								break;
+						case 0:
+							effecteur.performAction(Action.BougerB);
+							break;
+						case 1:
+							effecteur.performAction(Action.BougerD);
+							break;
+						case 2:
+							effecteur.performAction(Action.BougerG);
+							break;
+						case 3:
+							effecteur.performAction(Action.BougerH);
+							break;
 						}
 
 
@@ -93,21 +99,23 @@ public class Main {
 
 
 
-			try {
-				Case currentCase = carte.getCase(agent.getX(), agent.getY());
-				Type currentType = currentCase.getType();
-				if(currentType == Type.CREVASSE || currentType == Type.MONSTRE) {
-					System.out.println("YOU LOSE");
-				} else {
-					System.out.println("YOU WIN");
+				try {
+					Case currentCase = carte.getCase(agent.getX(), agent.getY());
+					Type currentType = currentCase.getType();
+					if(currentType == Type.CREVASSE || currentType == Type.MONSTRE) {
+						System.out.println("YOU LOSE");
+						break;
+					} else {
+						System.out.println("YOU WIN");
+						nbLongueur++;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+
 			}
-
-
 		}
-		}
+	}
 
 
 
