@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
 
@@ -101,10 +102,18 @@ public class Main {
 					Case currentCase = carte.getCase(agent.getX(), agent.getY());
 					Type currentType = currentCase.getType();
 					if(currentType == Type.CREVASSE || currentType == Type.MONSTRE) {
-						System.out.println("YOU LOSE");
-						break;
+						System.out.println("YOU LOSE, DO YOU WANT TO CONTINUE ? (Y/N)");
+						Scanner in = new Scanner(System.in);
+						if(!in.nextLine().toLowerCase().equals("y") ){
+							break;
+						}
+						
 					} else {
-						System.out.println("YOU WIN");
+						System.out.println("YOU WIN, DO YOU WANT TO CONTINUE ? (Y/N)");
+						Scanner in = new Scanner(System.in);
+						if(!in.nextLine().toLowerCase().equals("y") ){
+							break;
+						}
 						nbLongueur++;
 					}
 				} catch (Exception e) {

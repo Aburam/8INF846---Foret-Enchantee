@@ -94,64 +94,6 @@ public class Effecteur {
         agent.bouger(dx,dy);
     }
     
-    private void move(){
-    	SolveInfo info;
-		boolean north=false,south=false,east=false,west=false;
-		try {
-			info = m_engine.solve("goNorth("+agent.getX()+","+agent.getY()+").");
-			if(info.isSuccess()){
-				north=true;
-			}
-			info = m_engine.solve("goSouth("+agent.getX()+","+agent.getY()+").");
-			if(info.isSuccess()){
-				south=true;
-			}
-			info = m_engine.solve("goEast("+agent.getX()+","+agent.getY()+").");
-			if(info.isSuccess()){
-				west=true;
-			}
-			info = m_engine.solve("goWest("+agent.getX()+","+agent.getY()+").");
-			if(info.isSuccess()){
-				east=true;
-			}
-		} catch (MalformedGoalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(north){
-			try {
-				performAction(Action.BougerH);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else if(south){
-			try {
-				performAction(Action.BougerB);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else if (east){
-			try {
-				performAction(Action.BougerD);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else if (west){
-			try {
-				performAction(Action.BougerG);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-    }
-    
     private void flee(){
 		SolveInfo info;
 		boolean north=false,south=false,east=false,west=false;
@@ -214,57 +156,11 @@ public class Effecteur {
 			try {
 				currentPosition = carte.getCase(agent.getX(), agent.getY());
 				bestNext=agent.getMeilleurCaseVoisine(carte);
-				int distanceX = calculateDistance(currentPosition.getPositionX(), bestNext.getPositionX());
-				int distanceY = calculateDistance(currentPosition.getPositionY(), bestNext.getPositionY());
 				if(currentPosition.getCapteur().equals(Capteur.ODEUR)){
-					if(distanceX != 0 )
-					{
 
-						switch(distanceX){
-							case 1:
-								shoot(Action.TirerD);
-								break;
-							case -1:
-								shoot(Action.TirerG);
-								break;
-						}
-					}
-					else if(distanceY !=0)
-					{
-						switch(distanceY){
-							case 1:
-								shoot(Action.TirerB);
-								break;
-							case -1:
-								shoot(Action.TirerH);
-								break;
-						}
-					}
 				}
 				else if(currentPosition.getCapteur().equals(Capteur.VENT)){
-					if(distanceX != 0 )
-					{
-
-						switch(distanceX){
-							case 1:
-								performAction(Action.BougerD);
-								break;
-							case -1:
-								performAction(Action.BougerG);
-								break;
-						}
-					}
-					else if(distanceY !=0)
-					{
-						switch(distanceY){
-							case 1:
-								performAction(Action.BougerB);
-								break;
-							case -1:
-								performAction(Action.BougerH);
-								break;
-						}
-					}
+					
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -274,40 +170,19 @@ public class Effecteur {
 	}
 
 	public void agir(){
-		SolveInfo info,infoWind,infoPoop;
+		SolveInfo info;
 		try {
-			infoPoop = m_engine.solve("poop("+agent.getX()+","+agent.getY()+").");
-			infoWind = m_engine.solve("wind("+agent.getX()+","+agent.getY()+").");
-			if(infoPoop.isSuccess()){
+			info = m_engine.solve("poop("+agent.getX()+","+agent.getY()+").");
+			if(info.isSuccess()){
 				info = m_engine.solve("shootHim("+agent.getX()+","+agent.getY()+").");
 				if(info.isSuccess()){
 					Case caseCible = agent.getMeilleurCaseVoisine(carte);
 					
 				}
-				else {
-					flee();
-				}
-			}
-			else if (infoWind.isSuccess()){
-				info = m_engine.solve("cold("+agent.getX()+","+agent.getY()+").");
-				if(info.isSuccess()){
-					Case caseCible = agent.getMeilleurCaseVoisine(carte);
-					
-				}
-				else {
-					flee();
-				}
-			}
-			else {
-				move();
 			}
 		} catch (MalformedGoalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	private int calculateDistance(int currentPosition, int nextPosition){
-		return nextPosition-currentPosition;
 	}
 }
