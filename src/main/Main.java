@@ -34,7 +34,7 @@ public class Main {
 			while(true){
 
 				Agent agent = new Agent(0,0);
-				Carte carte = new Carte(6, agent,engine);
+				Carte carte = new Carte(nbLongueur, agent,engine);
 				Effecteur effecteur = new Effecteur(agent, carte,engine);
 				
 				Random generator = new Random();
