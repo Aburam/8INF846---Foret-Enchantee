@@ -41,5 +41,6 @@ public class Effecteur {
         carte.getCase(agent.getX()+dx,agent.getY()+dy).setAgent(agent);
         carte.getCase(agent.getX(),agent.getY()).setAgent(null);
         agent.bouger(dx,dy);
+		agent.ajouterCaseVisitee(carte, carte.getCase(dx, dy));
     }
 }
