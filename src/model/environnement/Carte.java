@@ -1,5 +1,8 @@
 package model.environnement;
 
+import alice.tuprolog.MalformedGoalException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
 import model.agent.Agent;
 import model.capteurs.Capteur;
 
@@ -8,12 +11,14 @@ public class Carte {
 	private int m_longueur;
 	private Case[][] m_cases;
 	private Agent m_agent;
+	private Prolog m_engine;
 
 	
-	public Carte(int longueur, Agent agent){
+	public Carte(int longueur, Agent agent, Prolog engine){
 		m_longueur = longueur;
 		m_agent = agent;
 		m_cases = new Case[m_longueur][m_longueur];
+		m_engine = engine;
 		init();
 		m_cases[0][0].setAgent(m_agent);
 		m_cases[0][0].setType(Type.NEUTRE);
@@ -29,9 +34,16 @@ public class Carte {
 		for(int positionX = 0; positionX<m_longueur ; ++positionX){
 			for(int positionY = 0; positionY<m_longueur; ++positionY){
 				m_cases[positionY][positionX] = new Case(positionX, positionY);
-
+				try {
+					m_engine.solve("setWalkable("+positionX+","+positionY+").");
+				} catch (MalformedGoalException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					
+				}
 				if(calculProbabiliteCrevasse() ){
 					m_cases[positionY][positionX].setType(Type.CREVASSE);
+					
 				}
 				else if(calculProbabiliteMonstre()){
 					m_cases[positionY][positionX].setType(Type.MONSTRE);
@@ -47,6 +59,13 @@ public class Carte {
 		}
 		m_cases[positionLumiereY][positionLumiereX] = new Case(positionLumiereX, positionLumiereY);
 		m_cases[positionLumiereY][positionLumiereX].addCapteur(Capteur.LUMIERE);
+		try {
+			m_engine.solve("setLight("+positionLumiereX+","+positionLumiereY+").");
+		} catch (MalformedGoalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}
 	}
 	
 	
@@ -59,27 +78,63 @@ public class Carte {
 						switch(m_cases[y+1][x].getType()){
 							case CREVASSE:
 								m_cases[y][x].addCapteur(Capteur.VENT);
+								try {
+									m_engine.solve("setWind("+x+","+y+").");
+								} catch (MalformedGoalException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								break;
 							case MONSTRE:
 								m_cases[y][x].addCapteur(Capteur.ODEUR);
+								try {
+									m_engine.solve("setPoop("+x+","+y+").");
+								} catch (MalformedGoalException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 						}
 					}
 					if(y>0){
 						switch(m_cases[y-1][x].getType()){
 							case CREVASSE:
 								m_cases[y][x].addCapteur(Capteur.VENT);
+								try {
+									m_engine.solve("setWind("+x+","+y+").");
+								} catch (MalformedGoalException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								break;
 							case MONSTRE:
 								m_cases[y][x].addCapteur(Capteur.ODEUR);
+								try {
+									m_engine.solve("setPoop("+x+","+y+").");
+								} catch (MalformedGoalException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 						}
 					}
 					if(x<m_longueur-1){
 						switch(m_cases[y][x+1].getType()){
 							case CREVASSE:
 								m_cases[y][x].addCapteur(Capteur.VENT);
+								try {
+									m_engine.solve("setWind("+x+","+y+").");
+								} catch (MalformedGoalException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								break;
 							case MONSTRE:
 								m_cases[y][x].addCapteur(Capteur.ODEUR);
+								try {
+									m_engine.solve("setPoop("+x+","+y+").");
+								} catch (MalformedGoalException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 						}
 					}
 					if(x>0){
@@ -89,6 +144,12 @@ public class Carte {
 								break;
 							case MONSTRE:
 								m_cases[y][x].addCapteur(Capteur.ODEUR);
+								try {
+									m_engine.solve("setPoop("+x+","+y+").");
+								} catch (MalformedGoalException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 						}
 					}
 				}

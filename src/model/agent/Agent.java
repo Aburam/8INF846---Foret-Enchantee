@@ -5,6 +5,7 @@ import model.environnement.Carte;
 import model.environnement.Case;
 
 import java.util.*;
+import alice.tuprolog.Prolog;
 
 public class Agent{
 
@@ -13,6 +14,8 @@ public class Agent{
 
 	private List<Case> casesVisitee;
 	private List<Case> casesFrontiere;
+
+	private Prolog engine;
 
 	public Agent(int x, int y) {
 		this.x = x;
