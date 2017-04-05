@@ -5,7 +5,10 @@ import model.environnement.Carte;
 import model.environnement.Case;
 
 import java.util.*;
+
+import alice.tuprolog.MalformedGoalException;
 import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
 
 public class Agent{
 
@@ -14,8 +17,6 @@ public class Agent{
 
 	private List<Case> casesVisitee;
 	private List<Case> casesFrontiere;
-
-	private Prolog engine;
 
 	public Agent(int x, int y) {
 		this.x = x;
@@ -28,7 +29,7 @@ public class Agent{
 	{
 		return "A";
 	}
-
+	
 	public int getX(){return this.x;};
 	public int getY(){return this.y;};
 

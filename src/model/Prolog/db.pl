@@ -27,15 +27,15 @@ removeHole(X,Y) :- retractall(hole(X,Y)).
 safe(X,Y) :- walkable(X,Y), visited(X,Y), not(poop(X,Y)), not(wind(X,Y)).
 
 /*The Agent wants to get out of there ASAP*/
-goNorth(X,Y) :- N is Y-1, not(visited(X,N)).
-goSouth(X,Y) :- S is Y+1, not(visited(X,S)).
-goEast(X,Y) :- E is X+1, not(visited(E,Y)).
-goWest(X,Y) :- W is X-1, not(visited(W,Y)).
+goNorth(X,Y) :- N is Y-1, not(visited(X,N)), walkable(X,N).
+goSouth(X,Y) :- S is Y+1, not(visited(X,S)), walkable(X,S).
+goEast(X,Y) :- E is X+1, not(visited(E,Y)), walkable(E,Y).
+goWest(X,Y) :- W is X-1, not(visited(W,Y)), walkable(W,Y).
 
 /*Should the agent shoot a giant rock*/
 shoot(X,Y) :- N is Y-1, S is Y+1, W is X-1, E is X+1,
 NN is Y-2, SS is Y+2, WW is X-2, EE is X+2,
-poop(X,Y), 
+shootHim(X,Y), 
 ((visited(X,N);not(walkable(X,N)),visited(W,N);not(walkable(W,N)),visited(E,N);not(walkable(E,N)),visited(X,NN);not(walkable(X,NN)));
 (visited(X,S);not(walkable(X,S)),visited(W,S);not(walkable(W,S)),visited(E,S);not(walkable(E,S)),visited(X,SS);not(walkable(X,SS)));
 (visited(E,Y);not(walkable(E,Y)),visited(E,N);not(walkable(E,N)),visited(E,S);not(walkable(E,S)),visited(EE,Y);not(walkable(EE,Y)));
@@ -53,7 +53,7 @@ portalFound(X,Y) :- light(X,Y).
 /*Should Agent try to go for another case*/
 cross(X,Y) :- N is Y-1, S is Y+1, W is X-1, E is X+1,
 NN is Y-2, SS is Y+2, WW is X-2, EE is X+2,
-wind(X,Y), 
+cold(X,Y), 
 ((visited(X,N);not(walkable(X,N)),visited(W,N);not(walkable(W,N)),visited(E,N);not(walkable(E,N)),visited(X,NN);not(walkable(X,NN)));
 (visited(X,S);not(walkable(X,S)),visited(W,S);not(walkable(W,S)),visited(E,S);not(walkable(E,S)),visited(X,SS);not(walkable(X,SS)));
 (visited(E,Y);not(walkable(E,Y)),visited(E,N);not(walkable(E,N)),visited(E,S);not(walkable(E,S)),visited(EE,Y);not(walkable(EE,Y)));

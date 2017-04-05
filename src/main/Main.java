@@ -29,16 +29,14 @@ public class Main {
 			System.out.println("Sorry not here "+e1.line);
 			System.exit(0);
 		} finally {
-
 			int nbLongueur = 3;
 
 			while(true){
 
 				Agent agent = new Agent(0,0);
-				Carte carte = new Carte(nbLongueur, agent,engine);
-
-				Effecteur effecteur = new Effecteur(agent, carte);
-
+				Carte carte = new Carte(6, agent,engine);
+				Effecteur effecteur = new Effecteur(agent, carte,engine);
+				
 				Random generator = new Random();
 
 				try {
