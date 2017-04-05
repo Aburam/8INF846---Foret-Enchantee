@@ -156,8 +156,32 @@ public class Effecteur {
 			try {
 				currentPosition = carte.getCase(agent.getX(), agent.getY());
 				bestNext=agent.getMeilleurCaseVoisine(carte);
+				int distanceX = calculateDistance(currentPosition.getPositionX(), bestNext.getPositionX());
+				int distanceY = calculateDistance(currentPosition.getPositionY(), bestNext.getPositionY());
 				if(currentPosition.getCapteur().equals(Capteur.ODEUR)){
-					
+					if(distanceX != 0 )
+					{
+
+						switch(distanceX){
+							case 1:
+								shoot(Action.TirerD);
+								break;
+							case -1:
+								shoot(Action.TirerG);
+								break;
+						}
+					}
+					else if(distanceY !=0)
+					{
+						switch(distanceY){
+							case 1:
+								shoot(Action.TirerB);
+								break;
+							case -1:
+								shoot(Action.TirerH);
+								break;
+						}
+					}
 				}
 				else if(currentPosition.getCapteur().equals(Capteur.VENT)){
 					
@@ -184,5 +208,9 @@ public class Effecteur {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private int calculateDistance(int currentPosition, int nextPosition){
+		return nextPosition-currentPosition;
 	}
 }
